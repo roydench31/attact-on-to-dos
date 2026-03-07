@@ -7,6 +7,7 @@ import {
   closestCorners,
   useSensor,
   useSensors,
+  type CollisionDetection,
   type DragEndEvent,
 } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
@@ -39,6 +40,15 @@ export function KanbanBoard({ user }: KanbanBoardProps) {
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+  );
+
+  // Custom collision detection: filter out the active (dragged) item.
+  // closestCorners penalizes tall column droppables (far bottom corners),
+  // causing it to resolve `over` to the card's own compact droppable
+  // instead of the destination column for adjacent-column drags.
+  const collisionDetection: CollisionDetection = useCallback(
+    (args) => closestCorners(args).filter((c) => c.id !== args.active.id),
+    [],
   );
 
   const grouped = useMemo(() => {
@@ -78,7 +88,7 @@ export function KanbanBoard({ user }: KanbanBoardProps) {
         : findColumnOfId(overId)) as TodoStatus;
 
       if (!sourceCol || !destCol) return;
-      if (activeId === overId) return;
+      if (activeId === overId && sourceCol === destCol) return;
 
       let newTodos: Todo[];
 
@@ -179,7 +189,7 @@ export function KanbanBoard({ user }: KanbanBoardProps) {
       <div className="flex flex-1 gap-6 overflow-x-auto p-6">
         <DndContext
           sensors={sensors}
-          collisionDetection={closestCorners}
+          collisionDetection={collisionDetection}
           onDragEnd={onDragEnd}
         >
           {COLUMNS.map((col) => (
