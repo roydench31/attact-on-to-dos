@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-military: var(--font-cinzel), serif;
+
+  /* AOT Color Palette */
+  --color-aot-void: #0a0a0a;
+  --color-aot-obsidian: #111111;
+  --color-aot-iron: #1a1a1a;
+  --color-aot-slate: #2a2a2a;
+  --color-aot-fog: #6b6b6b;
+  --color-aot-bone: #c9c4b5;
+  --color-aot-parchment: #e8e0cc;
+  --color-aot-blood: #8b1a1a;
+  --color-aot-rust: #c0622a;
+  --color-aot-wings: #6b7c42;
+  --color-aot-gold: #c9a227;
+}
+
+/* Wall stone pattern for auth backgrounds */
+.wall-bg {
+  background-color: #0a0a0a;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 38px,
+      rgba(42, 42, 42, 0.6) 38px,
+      rgba(42, 42, 42, 0.6) 40px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 58px,
+      rgba(42, 42, 42, 0.4) 58px,
+      rgba(42, 42, 42, 0.4) 60px
+    );
+}
+
+/* Offset second row of bricks */
+.wall-bg::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 28px,
+      rgba(42, 42, 42, 0.3) 28px,
+      rgba(42, 42, 42, 0.3) 30px
+    );
+  background-size: 120px 80px;
+  background-position: 60px 40px;
+}
+
+/* Wings of Freedom decoration */
+.wings-border {
+  position: relative;
+}
+.wings-border::before,
+.wings-border::after {
+  content: "✦";
+  color: #c9a227;
+  font-size: 0.75rem;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.wings-border::before {
+  left: -1.25rem;
+}
+.wings-border::after {
+  right: -1.25rem;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #111111;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a2a2a;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #6b6b6b;
+}

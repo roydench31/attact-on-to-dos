@@ -1,0 +1,109 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+    output   = "../generated/prisma"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+enum Role {
+    USER
+    ADMIN
+}
+
+enum Priority {
+    LOW
+    MEDIUM
+    HIGH
+}
+
+enum TodoStatus {
+    PENDING
+    IN_PROGRESS
+    DONE
+}
+
+// Necessary for Next auth
+model Account {
+    id                       String  @id @default(cuid())
+    userId                   String
+    type                     String
+    provider                 String
+    providerAccountId        String
+    refresh_token            String? @db.Text
+    access_token             String? @db.Text
+    expires_at               Int?
+    token_type               String?
+    scope                    String?
+    id_token                 String? @db.Text
+    session_state            String?
+    user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    refresh_token_expires_in Int?
+
+    @@unique([provider, providerAccountId])
+}
+
+model Session {
+    id           String   @id @default(cuid())
+    sessionToken String   @unique
+    userId       String
+    expires      DateTime
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+    id            String    @id @default(cuid())
+    name          String?
+    email         String?   @unique
+    emailVerified DateTime?
+    image         String?
+    password      String?
+    role          Role      @default(USER)
+    createdAt     DateTime  @default(now())
+    accounts      Account[]
+    sessions      Session[]
+    todos         Todo[]
+    tags          Tag[]
+}
+
+model VerificationToken {
+    identifier String
+    token      String   @unique
+    expires    DateTime
+
+    @@unique([identifier, token])
+}
+
+model Tag {
+    id        String   @id @default(cuid())
+    name      String
+    color     String   @default("#6b7c42")
+    userId    String
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    todos     Todo[]
+    createdAt DateTime @default(now())
+
+    @@unique([name, userId])
+}
+
+model Todo {
+    id          String     @id @default(cuid())
+    title       String
+    description String?    @db.Text
+    dueDate     DateTime?
+    priority    Priority   @default(MEDIUM)
+    status      TodoStatus @default(PENDING)
+    order       Int        @default(0)
+    userId      String
+    user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+    tags        Tag[]
+    createdAt   DateTime   @default(now())
+    updatedAt   DateTime   @updatedAt
+
+    @@index([userId, status])
+}
