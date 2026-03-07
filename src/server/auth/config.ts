@@ -28,7 +28,7 @@ export const authConfig = {
           .object({
             email: z.string().email(),
             password: z.string().min(1),
-            recaptchaToken: z.string().min(1),
+            recaptchaToken: z.string().optional().default(""),
           })
           .safeParse(credentials);
 
@@ -36,22 +36,24 @@ export const authConfig = {
 
         const { email, password, recaptchaToken } = parsed.data;
 
-        // Verify reCAPTCHA
-        const recaptchaRes = await fetch(
-          "https://www.google.com/recaptcha/api/siteverify",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams({
-              secret: env.RECAPTCHA_SECRET_KEY,
-              response: recaptchaToken,
-            }),
-          },
-        );
-        const recaptchaData = (await recaptchaRes.json()) as {
-          success: boolean;
-        };
-        if (!recaptchaData.success) return null;
+        // Verify reCAPTCHA (skipped for post-registration auto-login where token was already verified)
+        if (recaptchaToken) {
+          const recaptchaRes = await fetch(
+            "https://www.google.com/recaptcha/api/siteverify",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/x-www-form-urlencoded" },
+              body: new URLSearchParams({
+                secret: env.RECAPTCHA_SECRET_KEY,
+                response: recaptchaToken,
+              }),
+            },
+          );
+          const recaptchaData = (await recaptchaRes.json()) as {
+            success: boolean;
+          };
+          if (!recaptchaData.success) return null;
+        }
 
         const user = await db.user.findUnique({ where: { email } });
         if (!user?.password) return null;

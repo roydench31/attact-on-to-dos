@@ -22,7 +22,6 @@ export function SignupForm() {
       const result = await signIn("credentials", {
         email,
         password,
-        recaptchaToken: recaptchaToken ?? "",
         redirect: false,
       });
       if (result?.error) {
