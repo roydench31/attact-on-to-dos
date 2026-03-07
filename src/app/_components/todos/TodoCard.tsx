@@ -47,7 +47,7 @@ export function TodoCard({ todo, onClick }: TodoCardProps) {
       }}
       {...attributes}
       {...listeners}
-      onClick={onClick}
+      onClick={isDragging ? undefined : onClick}
       className="cursor-pointer border border-aot-slate bg-aot-iron p-3 shadow-md transition-colors hover:border-aot-fog"
     >
       <p className="text-sm font-medium leading-snug text-aot-bone">
