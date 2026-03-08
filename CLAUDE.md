@@ -24,7 +24,7 @@ Attack on To-Do's is a Kanban-style todo management app built with the T3 stack 
 
 - **Framework:** Next.js 15 (App Router) with React 19
 - **API:** tRPC v11 with SuperJSON transformer, React Query v5
-- **Database:** MySQL via Prisma ORM (client generated to `generated/prisma/`)
+- **Database:** PostgreSQL via Prisma ORM (client generated to `generated/prisma/`)
 - **Auth:** NextAuth v5 (beta) with credentials provider (email/password + bcrypt) and JWT sessions
 - **Styling:** Tailwind CSS v4
 - **Drag & drop:** @dnd-kit
