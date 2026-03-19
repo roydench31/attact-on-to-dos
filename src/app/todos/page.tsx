@@ -12,7 +12,13 @@ export default async function TodosPage() {
 
   return (
     <HydrateClient>
-      <KanbanBoard user={{ name: session.user.name ?? "", email: session.user.email ?? "" }} />
+      <KanbanBoard
+        user={{
+          name: session.user.name ?? "",
+          email: session.user.email ?? "",
+          role: session.user.role,
+        }}
+      />
     </HydrateClient>
   );
 }

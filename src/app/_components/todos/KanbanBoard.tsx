@@ -23,7 +23,7 @@ type TodoStatus = "PENDING" | "IN_PROGRESS" | "DONE";
 const COLUMNS: TodoStatus[] = ["PENDING", "IN_PROGRESS", "DONE"];
 
 interface KanbanBoardProps {
-  user: { name: string; email: string };
+  user: { name: string; email: string; role: "USER" | "ADMIN" };
 }
 
 function useIsMobile(breakpoint = 768) {
@@ -225,12 +225,14 @@ export function KanbanBoard({ user }: KanbanBoardProps) {
             <span className="text-aot-fog text-sm">
               {user.name || user.email}
             </span>
-            <Link
-              href="/admin"
-              className="font-military text-aot-fog hover:text-aot-gold text-xs tracking-widest"
-            >
-              ADMIN
-            </Link>
+            {user.role === "ADMIN" && (
+              <Link
+                href="/admin"
+                className="font-military text-aot-fog hover:text-aot-gold text-xs tracking-widest"
+              >
+                ADMIN
+              </Link>
+            )}
             <button
               onClick={() => void signOut({ callbackUrl: "/login" })}
               className="font-military text-aot-fog hover:text-aot-blood text-xs tracking-widest"
