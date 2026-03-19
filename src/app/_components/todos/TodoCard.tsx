@@ -6,6 +6,7 @@ import { format, isPast, isToday } from "date-fns";
 import type { RouterOutputs } from "~/trpc/react";
 
 type Todo = RouterOutputs["todo"]["getAll"][number];
+type TodoStatus = "PENDING" | "IN_PROGRESS" | "DONE";
 
 const priorityBorderColor: Record<string, string> = {
   HIGH: "#8b1a1a",
@@ -13,12 +14,40 @@ const priorityBorderColor: Record<string, string> = {
   LOW: "#6b7c42",
 };
 
+const statusColors: Record<
+  TodoStatus,
+  { text: string; hover: string; bg: string }
+> = {
+  PENDING: {
+    text: "text-aot-fog",
+    hover: "hover:text-aot-fog",
+    bg: "bg-aot-fog/20 border-aot-fog/50",
+  },
+  IN_PROGRESS: {
+    text: "text-aot-gold",
+    hover: "hover:text-aot-gold",
+    bg: "bg-aot-gold/20 border-aot-gold/50",
+  },
+  DONE: {
+    text: "text-aot-wings",
+    hover: "hover:text-aot-wings",
+    bg: "bg-aot-wings/20 border-aot-wings/50",
+  },
+};
+
 interface TodoCardProps {
   todo: Todo;
   onClick: () => void;
+  isMobile?: boolean;
+  onStatusChange?: (status: TodoStatus) => void;
 }
 
-export function TodoCard({ todo, onClick }: TodoCardProps) {
+export function TodoCard({
+  todo,
+  onClick,
+  isMobile = false,
+  onStatusChange,
+}: TodoCardProps) {
   const {
     attributes,
     listeners,
@@ -36,29 +65,54 @@ export function TodoCard({ todo, onClick }: TodoCardProps) {
     return "text-aot-fog";
   };
 
+  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    e.stopPropagation();
+    if (onStatusChange) {
+      onStatusChange(e.target.value as TodoStatus);
+    }
+  };
+
   return (
     <div
       ref={setNodeRef}
+      data-dnd-sortable-item
       style={{
+        touchAction: isMobile ? undefined : "none",
         transform: CSS.Transform.toString(transform),
         transition,
         opacity: isDragging ? 0.4 : 1,
         borderLeft: `3px solid ${priorityBorderColor[todo.priority] ?? "#6b6b6b"}`,
       }}
-      {...attributes}
-      {...listeners}
+      {...(isMobile ? {} : { ...attributes, ...listeners })}
       onClick={isDragging ? undefined : onClick}
-      className="cursor-pointer border border-aot-slate bg-aot-iron p-3 shadow-md transition-colors hover:border-aot-fog"
+      className="border-aot-slate bg-aot-iron hover:border-aot-fog cursor-pointer border p-3 shadow-md transition-colors"
     >
-      <p className="text-sm font-medium leading-snug text-aot-bone">
-        {todo.title}
-      </p>
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0 flex-1">
+          <p className="text-aot-bone text-sm leading-snug font-medium">
+            {todo.title}
+          </p>
 
-      {todo.description && (
-        <p className="mt-1 line-clamp-2 text-xs text-aot-fog">
-          {todo.description}
-        </p>
-      )}
+          {todo.description && (
+            <p className="text-aot-fog mt-1 line-clamp-2 text-xs">
+              {todo.description}
+            </p>
+          )}
+        </div>
+
+        {isMobile && onStatusChange && (
+          <select
+            value={todo.status}
+            onChange={handleStatusChange}
+            onClick={(e) => e.stopPropagation()}
+            className={`bg-aot-iron font-military flex-shrink-0 cursor-pointer rounded-sm border px-2 py-1 text-xs tracking-wide transition-colors ${statusColors[todo.status].text} ${statusColors[todo.status].bg}`}
+          >
+            <option value="PENDING">Pending</option>
+            <option value="IN_PROGRESS">In Progress</option>
+            <option value="DONE">Done</option>
+          </select>
+        )}
+      </div>
 
       <div className="mt-2 flex flex-wrap items-center justify-between gap-1">
         <div className="flex flex-wrap gap-1">
