@@ -6,7 +6,7 @@ import { Geist, Cinzel } from "next/font/google";
 import { TRPCReactProvider } from "~/trpc/react";
 
 export const metadata: Metadata = {
-  title: "Attack on To-Dos",
+  title: "Attack on Todos",
   description: "Conquer your tasks. No one is safe from the titans of procrastination.",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };

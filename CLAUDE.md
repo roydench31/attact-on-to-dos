@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Attack on To-Do's is a Kanban-style todo management app built with the T3 stack (create-t3-app). Users can create, organize, and drag-and-drop todos across status columns (Pending, In Progress, Done) with tagging, priority levels, and due dates. Includes admin panel for user management.
+Attack on Todos is a Kanban-style todo management app built with the T3 stack (create-t3-app). Users can create, organize, and drag-and-drop todos across status columns (Pending, In Progress, Done) with tagging, priority levels, and due dates. Includes admin panel for user management.
 
 ## Commands
 

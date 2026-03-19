@@ -219,7 +219,7 @@ export function KanbanBoard({ user }: KanbanBoardProps) {
       <nav className="border-aot-slate bg-aot-obsidian border-b px-6 py-3">
         <div className="flex items-center justify-between">
           <h1 className="font-military text-aot-parchment text-xl font-bold tracking-widest">
-            ATTACK ON TO-DO&apos;S
+            Attack on Todos
           </h1>
           <div className="flex items-center gap-4">
             <span className="text-aot-fog text-sm">

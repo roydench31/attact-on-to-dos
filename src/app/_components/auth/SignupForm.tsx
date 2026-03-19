@@ -75,7 +75,7 @@ export function SignupForm() {
         {/* Header */}
         <div className="mb-8 text-center">
           <h1 className="font-military text-3xl font-bold tracking-widest text-aot-parchment">
-            ATTACK ON TO-DOS
+            ATTACK ON TODOS
           </h1>
           <div className="mx-auto mt-2 h-px w-2/3 bg-aot-gold" />
           <p className="mt-3 font-military text-sm tracking-widest text-aot-fog">
